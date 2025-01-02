@@ -1,23 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>chats</title>
-</head>
-<body>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
     <h1>All Chats !!!</h1>
     <form action="/chats/add" method="get">
-        <button type="submit">
-            Add Chat
-        </button>
+      <button class="button" type="submit">Add Chat</button>
     </form>
-   <% for(let chat of chats){ %>
-        <div>
-            <h2>From : <%= chat.from %></h2>
-            <h2>to : <%= chat.to %></h2>
-            <h2>message : <%= chat.message %></h2>
+    <% for(let chat of chats){ %>
+    <div class="container">
+      <div class="card">
+        <p class="from">From : <%= chat.from %></p>
+        <div class="chat-container">
+            <p class="message">message : <%= chat.message %></p>
         </div>
-   <%}%> 
-</body>
+        <p class="to">to : <%= chat.to %></p>
+        <hr>
+        <p class="date"><%= chat.createdAt.toString().split(" ")[4] %></p>
+        <p class="date"><%= chat.createdAt.toString().split(" ").slice(0,4).join("-") %></p>
+        <form  method="get" action="/chats/<%= chat._id %>/edit"><button class="edit-btn">Edit</button></form>
+        <form method="post" action="/chats/<%= chat._id %>?_method=DELETE" ><button class="delete-btn">Delete</button></form>
+      </div>
+    </div>
+    <%}%>
+  </body>
 </html>

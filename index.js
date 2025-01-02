@@ -3,7 +3,7 @@ const app = express();
 const path = require("path");
 const mongoose = require("mongoose");
 const Chat = require("./models/chat");
-const { timeStamp } = require("console");
+const methodOverride = require("method-override")
 const PORT = 3000;
 
 mongoose
@@ -15,6 +15,7 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride("_method"))
 
 app.get("/", (req, res) => {
   res.send("app is working");
@@ -43,4 +44,25 @@ app.post("/chats", (req, res) => {
     .catch((e) => console.log("Error is : ", e));
   res.redirect("/chats");
 });
+
+app.get("/chats/:id/edit", async (req,res)=>{
+    let {id} = req.params
+    let chat = await Chat.findById(id)
+    res.render("edit",{chat})
+})
+
+app.put("/chats/:id",async (req,res)=>{
+    let { id } = req.params;
+    let {message : newMessage} = req.body
+    let newChat = await Chat.findByIdAndUpdate(id,{message:newMessage})
+    res.redirect("/chats")
+})
+
+
+app.delete("/chats/:id",async (req,res)=>{
+    let { id } = req.params;
+    await Chat.findByIdAndDelete(id)
+    res.redirect("/chats")
+})
+
 app.listen(PORT, () => console.log("App listening"));
